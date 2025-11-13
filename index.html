@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop Iyawo</title>
+  <meta name="description" content="Tienda online de productos Iyawo">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 30'><text x='0' y='25' font-family='Arial' font-size='24' fill='%23007bff'>Iyawo</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="permissions-banner" id="permissions-banner">
+    ✨ Habilita los permisos para mejor experiencia.
+    <button id="request-permissions">Habilitar</button>
+  </div>
+
+  <header>
+    <svg class="logo" viewBox="0 0 120 30" aria-label="Iyawo Logo">
+      <text x="0" y="25" font-family="Arial, sans-serif" font-size="22" font-weight="bold">Iyawo</text>
+    </svg>
+    <h1>Shop Iyawo</h1>
+    <button id="cart-btn" aria-label="Carrito">
+      🛒
+      <span id="cart-count">0</span>
+    </button>
+  </header>
+
+  <div class="container">
+    <!-- Sección de Información del Negocio -->
+    <section class="business-info">
+      <h2>Información del Negocio</h2>
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>📍 Ubicación</h3>
+          <p>Nuestro negocio está ubicado en:</p>
+          <p><strong>Dirección:</strong> Calle Principal #123, Ciudad</p>
+          <button id="location-btn" class="info-btn">Ver en Maps</button>
+        </div>
+        <div class="info-card">
+          <h3>🕐 Horarios de Atención</h3>
+          <p><strong>Lunes a Sábado:</strong> 8:00 AM - 5:00 PM</p>
+          <p><strong>Domingo:</strong> Cerrado</p>
+          <p class="note">* Las entregas se realizan dentro del horario comercial</p>
+        </div>
+        <div class="info-card">
+          <h3>📞 Contacto y Dudas</h3>
+          <p>¿Tienes preguntas? Contáctanos directamente:</p>
+          <button id="whatsapp-btn" class="info-btn">💬 WhatsApp Directo</button>
+          <p>O únete a nuestro grupo:</p>
+          <button id="group-btn" class="info-btn">👥 Grupo WhatsApp</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección de Productos -->
+    <section class="products-section">
+      <h2>Nuestros Productos</h2>
+      <div class="products-grid" id="products-grid"></div>
+    </section>
+  </div>
+
+  <!-- Modal para imágenes -->
+  <div id="image-modal" class="modal image-modal">
+    <div class="image-modal-content">
+      <span class="image-close">&times;</span>
+      <img id="expanded-image" src="" alt="Imagen expandida">
+    </div>
+  </div>
+
+  <!-- Modal del carrito -->
+  <div id="cart-modal" class="modal" role="dialog" aria-labelledby="cart-title">
+    <div class="modal-content">
+      <span class="close" aria-label="Cerrar">&times;</span>
+      <h2 id="cart-title" class="cart-header">Tu Pedido</h2>
+      <div id="cart-items" class="cart-items"></div>
+      <div id="cart-total" class="cart-total">Total: $0.00</div>
+      <form id="checkout-form">
+        <label for="client-name">Nombre Completo *</label>
+        <input type="text" id="client-name" required>
+
+        <label for="id-card">Carnet de Identidad *</label>
+        <input type="text" id="id-card" required>
+
+        <label for="payment">Método de Pago *</label>
+        <select id="payment" required>
+          <option value="">Seleccionar</option>
+          <option value="efectivo">Efectivo</option>
+          <option value="transferencia">Transferencia Bancaria</option>
+        </select>
+
+        <label for="phone">Teléfono *</label>
+        <input type="tel" id="phone" required>
+
+        <label for="address">Dirección Exacta de Entrega *</label>
+        <textarea id="address" rows="3" required></textarea>
+
+        <label for="municipality">Municipio *</label>
+        <input type="text" id="municipality" required>
+
+        <label for="delivery-time">Hora de Entrega * (8:00 AM - 5:00 PM)</label>
+        <input type="time" id="delivery-time" min="08:00" max="17:00" required>
+
+        <label for="change">Vuelto Requerido (si paga en efectivo)</label>
+        <input type="number" id="change" step="0.01" min="0" placeholder="0.00">
+
+        <label for="notes">Notas Adicionales</label>
+        <textarea id="notes" rows="3" placeholder="Observaciones especiales..."></textarea>
+
+        <button type="submit">📤 Enviar Pedido por WhatsApp</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Pie de página -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Shop Iyawo</h3>
+        <p>Tu tienda de confianza para productos de calidad</p>
+      </div>
+      <div class="footer-section">
+        <h4>Contacto</h4>
+        <button class="footer-btn" onclick="openWhatsApp()">💬 WhatsApp</button>
+        <button class="footer-btn" onclick="openGroup()">👥 Grupo</button>
+      </div>
+      <div class="footer-section">
+        <h4>Horarios</h4>
+        <p>Lunes a Sábado: 8:00 AM - 5:00 PM</p>
+        <p>Domingo: Cerrado</p>
+      </div>
+      <div class="footer-section">
+        <h4>Ubicación</h4>
+        <p>Calle Principal #123, Ciudad</p>
+        <button class="footer-btn" onclick="openLocation()">📍 Ver Ubicación</button>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 Shop Iyawo. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
