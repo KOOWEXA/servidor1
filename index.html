@@ -5,19 +5,552 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shop Iyawo</title>
   <meta name="description" content="Tienda online de productos Iyawo">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 30'><text x='0' y='25' font-family='Arial' font-size='24' fill='%23007bff'>Iyawo</text></svg>">
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --primary: #007bff;
+      --success: #28a745;
+      --danger: #dc3545;
+      --dark: #343a40;
+      --light: #f8f9fa;
+      --gray: #6c757d;
+      --warning: #ffc107;
+      --info: #17a2b8;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    #cart-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #cart-count {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: var(--danger);
+      color: white;
+      font-size: 0.65rem;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.75rem;
+    }
+
+    .business-info {
+      margin: 2rem 0;
+    }
+
+    .business-info h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--dark);
+      font-size: 1.5rem;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .info-card h3 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .info-card p {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .note {
+      font-size: 0.8rem;
+      color: var(--gray);
+      font-style: italic;
+      margin-top: 0.5rem;
+    }
+
+    .info-btn {
+      background: var(--success);
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin: 0.5rem 0.2rem;
+    }
+
+    .products-section h2 {
+      text-align: center;
+      margin: 2rem 0 1rem 0;
+      color: var(--dark);
+      font-size: 1.5rem;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      background: #eee;
+      cursor: pointer;
+    }
+
+    .card-body {
+      padding: 0.75rem;
+    }
+
+    .product-name {
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      font-size: 1rem;
+    }
+
+    .product-name.available {
+      color: var(--success);
+    }
+
+    .product-name.unavailable {
+      color: var(--danger);
+    }
+
+    .product-desc {
+      font-size: 0.8rem;
+      color: var(--gray);
+      margin-bottom: 0.5rem;
+    }
+
+    .product-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .product-tag {
+      background: var(--warning);
+      color: var(--dark);
+      padding: 0.2rem 0.5rem;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .product-tag.garantia {
+      background: var(--info);
+      color: white;
+    }
+
+    .product-tag.mensajeria {
+      background: var(--success);
+      color: white;
+    }
+
+    .product-tag.factura {
+      background: var(--danger);
+      color: white;
+    }
+
+    .pricing-info {
+      margin-bottom: 0.5rem;
+    }
+
+    .price {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .bulk-price {
+      color: var(--success);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .bulk-savings {
+      color: var(--danger);
+      font-weight: 600;
+      font-size: 0.8rem;
+      margin-top: 0.2rem;
+    }
+
+    .add-to-cart {
+      width: 100%;
+      padding: 0.6rem;
+      background: var(--success);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .quantity-btn {
+      width: 28px;
+      height: 28px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .quantity-btn.minus {
+      background: var(--danger);
+    }
+
+    .quantity-display {
+      font-weight: 700;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 2000;
+    }
+
+    .modal-content {
+      background: white;
+      margin: 1.5rem auto;
+      padding: 1rem;
+      width: 95%;
+      max-width: 450px;
+      border-radius: 10px;
+      max-height: 85vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .image-modal-content {
+      background: transparent;
+      margin: auto;
+      padding: 0;
+      width: auto;
+      max-width: 90%;
+      max-height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .image-modal-content img {
+      max-width: 100%;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .image-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      font-size: 2rem;
+      font-weight: bold;
+      cursor: pointer;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 1.4rem;
+      font-weight: bold;
+      cursor: pointer;
+      color: #aaa;
+    }
+
+    .cart-header {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .cart-items {
+      margin-bottom: 1rem;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .cart-item-details {
+      flex: 1;
+    }
+
+    .cart-item-name {
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .item-price-info {
+      font-size: 0.9rem;
+      color: var(--gray);
+      margin-bottom: 0.5rem;
+    }
+
+    .bulk-discount {
+      color: var(--success);
+      font-weight: 600;
+      font-size: 0.8rem;
+      margin-left: 0.5rem;
+    }
+
+    .cart-item-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+    }
+
+    .remove-item {
+      background: var(--danger);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 0.3rem 0.6rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .cart-total {
+      font-size: 1.1rem;
+      font-weight: bold;
+      text-align: right;
+      margin: 1rem 0;
+      color: var(--primary);
+    }
+
+    #checkout-form {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    #checkout-form label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.1rem;
+      font-size: 0.9rem;
+    }
+
+    #checkout-form input,
+    #checkout-form select,
+    #checkout-form textarea {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+
+    #checkout-form input:focus,
+    #checkout-form select:focus,
+    #checkout-form textarea:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+
+    #checkout-form button {
+      background: var(--primary);
+      color: white;
+      padding: 0.7rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .bulk-notification {
+      background: #e8f5e8;
+      border: 1px solid #c8e6c9;
+      border-radius: 4px;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      font-size: 0.8rem;
+      color: #2e7d32;
+      text-align: center;
+    }
+
+    .footer {
+      background: var(--dark);
+      color: white;
+      padding: 1.5rem 1rem;
+      margin-top: 3rem;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .footer-section h3,
+    .footer-section h4 {
+      margin-bottom: 0.75rem;
+      color: var(--warning);
+    }
+
+    .footer-section p {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .footer-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin: 0.2rem;
+    }
+
+    .footer-bottom {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid #555;
+      font-size: 0.8rem;
+      color: #aaa;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 0.6rem;
+      }
+      h1 {
+        font-size: 1rem;
+      }
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      .products-grid {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+      }
+      .modal-content {
+        margin: 1rem;
+        padding: 0.8rem;
+      }
+      .image-modal-content {
+        max-width: 95%;
+      }
+      .product-image {
+        height: 200px;
+      }
+      .card-body {
+        padding: 0.6rem;
+      }
+      .cart-item {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .cart-item-actions {
+        align-items: flex-start;
+      }
+      .footer-content {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="permissions-banner" id="permissions-banner">
-    ✨ Habilita los permisos para mejor experiencia.
-    <button id="request-permissions">Habilitar</button>
-  </div>
-
   <header>
-    <svg class="logo" viewBox="0 0 120 30" aria-label="Iyawo Logo">
-      <text x="0" y="25" font-family="Arial, sans-serif" font-size="22" font-weight="bold">Iyawo</text>
-    </svg>
     <h1>Shop Iyawo</h1>
     <button id="cart-btn" aria-label="Carrito">
       🛒
@@ -26,21 +559,14 @@
   </header>
 
   <div class="container">
-    <!-- Sección de Información del Negocio -->
     <section class="business-info">
       <h2>Información del Negocio</h2>
       <div class="info-grid">
         <div class="info-card">
-          <h3>📍 Ubicación</h3>
-          <p>Nuestro negocio está ubicado en:</p>
-          <p><strong>Dirección:</strong> Calle Principal #123, Ciudad</p>
-          <button id="location-btn" class="info-btn">Ver en Maps</button>
-        </div>
-        <div class="info-card">
           <h3>🕐 Horarios de Atención</h3>
           <p><strong>Lunes a Sábado:</strong> 8:00 AM - 5:00 PM</p>
           <p><strong>Domingo:</strong> Cerrado</p>
-          <p class="note">* Las entregas se realizan dentro del horario comercial</p>
+          <p class="note">Las entregas se realizan dentro del horario comercial</p>
         </div>
         <div class="info-card">
           <h3>📞 Contacto y Dudas</h3>
@@ -52,14 +578,12 @@
       </div>
     </section>
 
-    <!-- Sección de Productos -->
     <section class="products-section">
       <h2>Nuestros Productos</h2>
       <div class="products-grid" id="products-grid"></div>
     </section>
   </div>
 
-  <!-- Modal para imágenes -->
   <div id="image-modal" class="modal image-modal">
     <div class="image-modal-content">
       <span class="image-close">&times;</span>
@@ -67,7 +591,6 @@
     </div>
   </div>
 
-  <!-- Modal del carrito -->
   <div id="cart-modal" class="modal" role="dialog" aria-labelledby="cart-title">
     <div class="modal-content">
       <span class="close" aria-label="Cerrar">&times;</span>
@@ -111,7 +634,6 @@
     </div>
   </div>
 
-  <!-- Pie de página -->
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-section">
@@ -128,17 +650,609 @@
         <p>Lunes a Sábado: 8:00 AM - 5:00 PM</p>
         <p>Domingo: Cerrado</p>
       </div>
-      <div class="footer-section">
-        <h4>Ubicación</h4>
-        <p>Calle Principal #123, Ciudad</p>
-        <button class="footer-btn" onclick="openLocation()">📍 Ver Ubicación</button>
-      </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2024 Shop Iyawo. Todos los derechos reservados.</p>
+      <p>&copy; Todos los derechos reservados.</p>
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script>
+    const PRODUCTS = [
+      {
+        id: 1,
+        name: "Colchón Full Size",
+        description: "Colchones cameros full size, Marca EKO, 100g poliester, Espuma suave, Tela blanca de maxima calidad, 137x190x20cm.",
+        price: 170.00,
+        currency: "USD",
+        image: "pd1.jpg",
+        bulkPrice: 135.00,
+        minBulkQuantity: 5,
+        tags: ["sin garantía", "sin mensajería", "sin factura"],
+        available: true
+      },
+      {
+        id: 2,
+        name: "TV 32 Pulgadas",
+        description: "Tv de 32 pulgadas con cajita interna y soporte incluído.",
+        price: 180,
+        currency: "USD",
+        image: "pd2.jpg",
+        bulkPrice: 160,
+        minBulkQuantity: 5,
+        tags: ["con garantía", "sin mensajería", "con factura"],
+        available: true
+      },
+      {
+        id: 3,
+        name: "Lavadora Secadora 8kg",
+        description: "Lavadora secadora eko de 8kg.",
+        price: 300,
+        currency: "USD",
+        image: "pd3.jpg",
+        bulkPrice: 270,
+        minBulkQuantity: 5,
+        tags: ["con garantía", "con mensajería", "con factura"],
+        available: true
+      },
+      {
+        id: 4,
+        name: "Refrigerador 8.5 Pies",
+        description: "Refrigerador eko de 8.5 pies.",
+        price: 320,
+        currency: "USD",
+        image: "pd4.jpg",
+        bulkPrice: 290,
+        minBulkQuantity: 5,
+        tags: ["con garantía", "con mensajería", "con factura"],
+        available: true
+      },
+      {
+        id: 5,
+        name: "Refrigerador 12 Pies",
+        description: "Refrigerador eko de 12 pies.",
+        price: 460,
+        currency: "USD",
+        image: "pd5.jpg",
+        bulkPrice: 430,
+        minBulkQuantity: 5,
+        tags: ["con garantía", "con mensajería", "con factura"],
+        available: true
+      },
+      {
+        id: 6,
+        name: "Batidora con Vaso",
+        description: "Batidora con vaso de cristal y moledor de especies.",
+        price: 50,
+        currency: "USD",
+        image: "pd6.jpg",
+        bulkPrice: 35,
+        minBulkQuantity: 5,
+        tags: ["con garantía", "sin mensajería", "con factura"],
+        available: true
+      },
+      {
+        id: 7,
+        name: "Cocina Inflarojo",
+        description: "Cocinas inflarojo.",
+        price: 45,
+        currency: "USD",
+        image: "pd7.jpg",
+        bulkPrice: 36,
+        minBulkQuantity: 5,
+        tags: ["con garantía", "sin mensajería", "con factura"],
+        available: true
+      },
+      {
+        id: 8,
+        name: "Sandwichera",
+        description: "Sandwichera, marca future tech.",
+        price: 35,
+        currency: "USD",
+        image: "pd8.jpg",
+        bulkPrice: 25,
+        minBulkQuantity: 5,
+        tags: ["con garantía", "sin mensajería", "con factura"],
+        available: true
+      },
+      {
+        id: 9,
+        name: "Olla a Presión 5L",
+        description: "Ollas de precion de 5L, marca elecstar.",
+        price: 35,
+        currency: "USD",
+        image: "pd9.jpg",
+        bulkPrice: 25,
+        minBulkQuantity: 5,
+        tags: ["sin garantía", "sin mensajería", "sin factura"],
+        available: true
+      },
+      {
+        id: 10,
+        name: "Olla a Presión 7L",
+        description: "Ollas de precion de 7L, marca elecstar.",
+        price: 40,
+        currency: "USD",
+        image: "pd9.jpg",
+        bulkPrice: 27,
+        minBulkQuantity: 5,
+        tags: ["sin garantía", "sin mensajería", "sin factura"],
+        available: true
+      },
+      {
+        id: 11,
+        name: "Arrocera Negra SACO",
+        description: "Arrocera negra, marca saco, 700w de fuerza, capacidad de 1.8L",
+        price: 40,
+        currency: "USD",
+        image: "pd10.jpg",
+        bulkPrice: 28,
+        minBulkQuantity: 5,
+        tags: ["con garantía", "sin mensajería", "con factura"],
+        available: true
+      },
+      {
+        id: 12,
+        name: "Arrocera Roja EKO",
+        description: "Arrocera roja, marca eko, 700w de fuerza, capacidad de 1.8L",
+        price: 35,
+        currency: "USD",
+        image: "pd11.jpg",
+        bulkPrice: 25,
+        minBulkQuantity: 5,
+        tags: ["sin garantía", "sin mensajería", "sin factura"],
+        available: true
+      },
+      {
+        id: 13,
+        name: "Arrocera Negra EKO",
+        description: "Arrocera negra, marca eko, 700w de fuerza, capacidad de 1.8L",
+        price: 35,
+        currency: "USD",
+        image: "pd12.jpg",
+        bulkPrice: 25,
+        minBulkQuantity: 5,
+        tags: ["sin garantía", "sin mensajería", "sin factura"],
+        available: true
+      },
+      {
+        id: 14,
+        name: "Olla Reina 6L",
+        description: "Olla Reina, marca eko, capacidad de 6L.",
+        price: 60,
+        currency: "USD",
+        image: "pd13.jpg",
+        bulkPrice: 47,
+        minBulkQuantity: 5,
+        tags: ["con garantía", "sin mensajería", "con factura"],
+        available: true
+      },
+      {
+        id: 15,
+        name: "Ventilador Recargable SACO",
+        description: "Ventilador recargable, marca saco, con panel solar, dos bombillos.",
+        price: 80,
+        currency: "USD",
+        image: "pd14.jpg",
+        bulkPrice: 67,
+        minBulkQuantity: 5,
+        tags: ["con garantía", "sin mensajería", "con factura"],
+        available: true
+      },
+      {
+        id: 16,
+        name: "Ventilador Recargable JMD",
+        description: "Ventilador recargable, marca JMD.",
+        price: 55,
+        currency: "USD",
+        image: "pd15.jpg",
+        bulkPrice: 43,
+        minBulkQuantity: 5,
+        tags: ["sin garantía", "sin mensajería", "sin factura"],
+        available: true
+      },
+      {
+        id: 17,
+        name: "Ventilador Recargable F6",
+        description: "Ventilador recargable F6, marca saco.",
+        price: 60,
+        currency: "USD",
+        image: "pd16.jpg",
+        bulkPrice: 47,
+        minBulkQuantity: 5,
+        tags: ["con garantía", "sin mensajería", "con factura"],
+        available: true
+      },
+      {
+        id: 18,
+        name: "Ventilador de Pared",
+        description: "Ventilador de pared con mando a distancia, marca eko.",
+        price: 45,
+        currency: "USD",
+        image: "pd17.jpg",
+        bulkPrice: 30,
+        minBulkQuantity: 5,
+        tags: ["con garantía", "sin mensajería", "con factura"],
+        available: true
+      },
+      {
+        id: 19,
+        name: "Lavadora + Secadora",
+        description: "Lavadora + secadora al vapor.",
+        price: 550,
+        currency: "USD",
+        image: "pd18.jpg",
+        bulkPrice: 535,
+        minBulkQuantity: 5,
+        tags: ["con garantía", "con mensajería", "con factura"],
+        available: true
+      }
+    ];
+
+    let cart = JSON.parse(localStorage.getItem('iyawo-cart')) || [];
+
+    const openWhatsApp = () => {
+      window.open('https://wa.me/5356381539', '_blank');
+    };
+
+    const openGroup = () => {
+      window.open('https://chat.whatsapp.com/IICxsZJ2sUn0r3Xi96ARO3?mode=hqrt2', '_blank');
+    };
+
+    const initImageModal = () => {
+      const imageModal = document.getElementById('image-modal');
+      const expandedImg = document.getElementById('expanded-image');
+      const imageClose = document.querySelector('.image-close');
+
+      document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('product-image')) {
+          expandedImg.src = e.target.src;
+          expandedImg.alt = e.target.alt;
+          imageModal.style.display = 'block';
+        }
+      });
+
+      imageClose.addEventListener('click', () => imageModal.style.display = 'none');
+      imageModal.addEventListener('click', (e) => {
+        if (e.target === imageModal) imageModal.style.display = 'none';
+      });
+    };
+
+    const getProductStatus = (product) => {
+      return product.available ? "Disponible" : "No Disponible";
+    };
+
+    const renderProducts = () => {
+      const grid = document.getElementById('products-grid');
+      grid.innerHTML = PRODUCTS.map(p => {
+        const savings = p.price - p.bulkPrice;
+        const savingsPercentage = ((savings / p.price) * 100).toFixed(0);
+        const status = getProductStatus(p);
+        const statusClass = p.available ? "available" : "unavailable";
+        
+        return `
+        <article class="product-card" role="region" aria-label="${p.name}">
+          <img 
+            src="${p.image}" 
+            alt="${p.name}" 
+            class="product-image"
+            loading="lazy"
+            width="500"
+            height="500"
+          >
+          <div class="card-body">
+            <h3 class="product-name ${statusClass}">${p.name} - ${status}</h3>
+            <p class="product-desc">${p.description}</p>
+            <div class="product-tags">
+              ${p.tags.map(tag => {
+                const className = tag.includes('garantía') ? 'garantia' : 
+                                tag.includes('mensajería') ? 'mensajeria' :
+                                tag.includes('factura') ? 'factura' : '';
+                return `<span class="product-tag ${className}">${tag}</span>`;
+              }).join('')}
+            </div>
+            <div class="pricing-info">
+              <p class="price">${p.currency} ${p.price.toFixed(2)} (individual)</p>
+              <p class="bulk-price">${p.currency} ${p.bulkPrice.toFixed(2)} (mín. ${p.minBulkQuantity} unidades)</p>
+              <p class="bulk-savings">¡Ahorra ${savingsPercentage}% comprando al por mayor!</p>
+            </div>
+            <button class="add-to-cart" data-id="${p.id}" ${!p.available ? 'disabled' : ''}>${p.available ? 'Agregar al carrito' : 'No Disponible'}</button>
+          </div>
+        </article>
+      `}).join('');
+      
+      document.querySelectorAll('.add-to-cart').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const id = parseInt(e.target.dataset.id);
+          addToCart(id);
+        });
+      });
+    };
+
+    const addToCart = (productId) => {
+      const product = PRODUCTS.find(p => p.id === productId);
+      if (!product || !product.available) return;
+
+      const item = cart.find(i => i.id === productId);
+      if (item) {
+        item.quantity++;
+      } else {
+        cart.push({ ...product, quantity: 1 });
+      }
+
+      saveCart();
+      updateCartUI();
+      showNotification(`${product.name} agregado al carrito`);
+    };
+
+    const removeFromCart = (productId) => {
+      cart = cart.filter(item => item.id !== productId);
+      saveCart();
+      updateCartUI();
+      renderCartModal();
+    };
+
+    const updateQuantity = (productId, newQuantity) => {
+      if (newQuantity <= 0) {
+        removeFromCart(productId);
+        return;
+      }
+
+      const item = cart.find(i => i.id === productId);
+      if (item) {
+        item.quantity = newQuantity;
+        saveCart();
+        updateCartUI();
+        renderCartModal();
+      }
+    };
+
+    const saveCart = () => {
+      localStorage.setItem('iyawo-cart', JSON.stringify(cart));
+    };
+
+    const updateCartUI = () => {
+      const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+      document.getElementById('cart-count').textContent = count;
+    };
+
+    const calculateItemPrice = (item) => {
+      return item.quantity >= item.minBulkQuantity ? item.bulkPrice : item.price;
+    };
+
+    const calculateTotalSavings = () => {
+      return cart.reduce((savings, item) => {
+        if (item.quantity >= item.minBulkQuantity) {
+          return savings + ((item.price - item.bulkPrice) * item.quantity);
+        }
+        return savings;
+      }, 0);
+    };
+
+    const renderCartModal = () => {
+      const itemsDiv = document.getElementById('cart-items');
+      const totalDiv = document.getElementById('cart-total');
+
+      if (cart.length === 0) {
+        itemsDiv.innerHTML = '<p>Tu carrito está vacío.</p>';
+        totalDiv.textContent = 'Total: $0.00';
+        return;
+      }
+
+      let total = 0;
+      const totalSavings = calculateTotalSavings();
+      
+      const itemsHTML = cart.map(item => {
+        const itemPrice = calculateItemPrice(item);
+        const itemTotal = itemPrice * item.quantity;
+        
+        total += itemTotal;
+        
+        return `
+          <div class="cart-item">
+            <div class="cart-item-details">
+              <div class="cart-item-name">${item.name}</div>
+              <div class="item-price-info">
+                ${item.quantity} × ${item.currency} ${itemPrice.toFixed(2)}
+                ${item.quantity >= item.minBulkQuantity ? 
+                  `<span class="bulk-discount">(Precio por cantidad aplicado)</span>` : 
+                  ''}
+              </div>
+              <div class="quantity-controls">
+                <button class="quantity-btn minus" data-id="${item.id}">-</button>
+                <span class="quantity-display">${item.quantity}</span>
+                <button class="quantity-btn plus" data-id="${item.id}">+</button>
+              </div>
+            </div>
+            <div class="cart-item-actions">
+              <div class="item-total">${item.currency} ${itemTotal.toFixed(2)}</div>
+              <button class="remove-item" data-id="${item.id}">Eliminar</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      let savingsHTML = '';
+      if (totalSavings > 0) {
+        savingsHTML = `
+          <div class="bulk-notification">
+            ¡Estás ahorrando $${totalSavings.toFixed(2)} con precios por cantidad!
+          </div>
+        `;
+      }
+
+      itemsDiv.innerHTML = savingsHTML + itemsHTML;
+      totalDiv.textContent = `Total: $${total.toFixed(2)}`;
+
+      document.querySelectorAll('.quantity-btn.minus').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const id = parseInt(e.target.dataset.id);
+          const item = cart.find(i => i.id === id);
+          if (item) {
+            updateQuantity(id, item.quantity - 1);
+          }
+        });
+      });
+
+      document.querySelectorAll('.quantity-btn.plus').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const id = parseInt(e.target.dataset.id);
+          const item = cart.find(i => i.id === id);
+          if (item) {
+            updateQuantity(id, item.quantity + 1);
+          }
+        });
+      });
+
+      document.querySelectorAll('.remove-item').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const id = parseInt(e.target.dataset.id);
+          removeFromCart(id);
+        });
+      });
+    };
+
+    const showNotification = (message) => {
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        position: fixed; bottom: 20px; right: 20px; 
+        background: #28a745; color: white; padding: 12px 20px;
+        border-radius: 6px; font-weight: 500; z-index: 3000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      `;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.remove();
+      }, 2000);
+    };
+
+    const generateWhatsAppMessage = () => {
+      const totalSavings = calculateTotalSavings();
+      const total = cart.reduce((sum, item) => sum + (calculateItemPrice(item) * item.quantity), 0);
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      
+      let message = "🛒 *PEDIDO - SHOP IYAWO* 🛒\n\n";
+      
+      message += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+      message += "📋 *DETALLE DEL PEDIDO*\n";
+      message += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+      
+      cart.forEach((item, index) => {
+        const itemPrice = calculateItemPrice(item);
+        const itemTotal = itemPrice * item.quantity;
+        
+        message += `*Producto ${index + 1}:* ${item.name}\n`;
+        message += `📝 ${item.description}\n`;
+        message += `🔢 Cantidad: ${item.quantity} unidad(es)\n`;
+        message += `💰 Precio unitario: $${itemPrice.toFixed(2)}\n`;
+        
+        if (item.quantity >= item.minBulkQuantity) {
+          message += `✅ *Precio por cantidad aplicado*\n`;
+        }
+        
+        message += `💵 Subtotal: $${itemTotal.toFixed(2)}\n`;
+        message += `🏷️ Servicios: ${item.tags.join(', ')}\n`;
+        message += `────────────────────────\n\n`;
+      });
+      
+      message += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+      message += "💰 *RESUMEN DE COMPRA*\n";
+      message += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+      
+      message += `📦 Total de productos: ${totalItems}\n`;
+      message += `💵 Subtotal: $${total.toFixed(2)}\n`;
+      
+      if (totalSavings > 0) {
+        message += `🎉 Ahorro por cantidad: $${totalSavings.toFixed(2)}\n`;
+      }
+      
+      message += `💳 *TOTAL A PAGAR: $${total.toFixed(2)}*\n\n`;
+      
+      message += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+      message += "👤 *INFORMACIÓN DEL CLIENTE*\n";
+      message += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+      
+      message += `👤 *Nombre:* ${document.getElementById('client-name').value}\n`;
+      message += `🆔 *Carnet:* ${document.getElementById('id-card').value}\n`;
+      message += `📞 *Teléfono:* ${document.getElementById('phone').value}\n`;
+      message += `📍 *Dirección:* ${document.getElementById('address').value}\n`;
+      message += `🏙️ *Municipio:* ${document.getElementById('municipality').value}\n`;
+      message += `💳 *Método de pago:* ${document.getElementById('payment').value}\n`;
+      message += `⏰ *Hora de entrega:* ${document.getElementById('delivery-time').value}\n`;
+      
+      if (document.getElementById('change').value) {
+        message += `💰 *Vuelto requerido:* $${document.getElementById('change').value}\n`;
+      }
+
+      if (document.getElementById('notes').value) {
+        message += `📝 *Notas adicionales:* ${document.getElementById('notes').value}\n`;
+      }
+      
+      message += "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+      message += "🏪 *INFORMACIÓN DEL NEGOCIO*\n";
+      message += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+      
+      message += `🏪 *Horario comercial:* 8:00 AM - 5:00 PM\n`;
+      message += `📞 *Contacto:* +53 5638 1539\n`;
+      message += `⏰ *Tiempo de entrega:* 24-48 horas hábiles\n`;
+      
+      message += "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+      message += "📋 *TÉRMINOS Y CONDICIONES*\n";
+      message += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+      
+      message += `• Los precios están expresados en USD\n`;
+      message += `• Las entregas se realizan de Lunes a Sábado\n`;
+      message += `• El pedido está sujeto a disponibilidad\n`;
+      message += `• Para cambios o devoluciones contactar al vendedor\n`;
+      
+      return message;
+    };
+
+    const initApp = () => {
+      renderProducts();
+      updateCartUI();
+      initImageModal();
+
+      document.getElementById('whatsapp-btn').addEventListener('click', openWhatsApp);
+      document.getElementById('group-btn').addEventListener('click', openGroup);
+
+      const modal = document.getElementById('cart-modal');
+      const cartBtn = document.getElementById('cart-btn');
+      const closeBtn = document.querySelector('.close');
+      
+      cartBtn.addEventListener('click', () => {
+        renderCartModal();
+        modal.style.display = 'block';
+      });
+
+      closeBtn.addEventListener('click', () => modal.style.display = 'none');
+      modal.addEventListener('click', e => {
+        if (e.target === modal) modal.style.display = 'none';
+      });
+
+      document.getElementById('checkout-form').addEventListener('submit', e => {
+        e.preventDefault();
+
+        if (cart.length === 0) {
+          showNotification('Tu carrito está vacío');
+          return;
+        }
+
+        const message = generateWhatsAppMessage();
+        const encodedMessage = encodeURIComponent(message);
+        window.open(`https://wa.me/5356381539?text=${encodedMessage}`, '_blank');
+
+        cart = [];
+        saveCart();
+        updateCartUI();
+        modal.style.display = 'none';
+        e.target.reset();
+        
+        showNotification('Pedido enviado correctamente por WhatsApp');
+      });
+    };
+
+    document.addEventListener('DOMContentLoaded', initApp);
+  </script>
 </body>
 </html>
